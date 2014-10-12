@@ -7,7 +7,13 @@ class Game:
         print(board[:3])
         print(board[3:6])
         print(board[6:])
-    
+        
+        for i in range(0,9):
+            if board[i] == 'x':
+                self.gui.addSymbol(i, 'X', 'blue')
+            elif board[i] == 'o':
+                    self.gui.addSymbol(i, 'O', 'red') 
+                       
     def newGame(self,YellerN):
 
         #loopa tills man antingen fått ett svar y dvs spela en ny omgång eller n ingen ny omgång. exit ifall nej, nyttspel ifall y
@@ -36,7 +42,8 @@ class Game:
             if board[i] is not spelare:
                 return None
 
-        print('grattis ', spelare, ' du har vunnit, vill du spela igen y/n?\n')
+        print('grattis ' + spelare + ' du har vunnit, vill du spela igen y/n?\n')
+        self.gui.setStatus('grattis ' + spelare + ' du har vunnit, vill du spela igen y/n?\n')
         self.newGame(input())
         
     def winCheck(self, board, spelare):
@@ -57,11 +64,13 @@ class Game:
 
         #om det inte finns någon tom ruta, dvs ingen ruta som innehåller '*' så är spelet oavgjort. Informera spelaren och fråga om en ny omgång
         if '*' not in board:
+            self.gui.setStatus('oavgjort, vill du spela igen?')
             self.newGame(input('oavgjort, vill du spela igen y/n?\n'))
 
     def playerAction(self,spelare):
         
-        print('spelare ', spelare, 'välj en tom plats på spelplanen igenom att trycka 0-8')
+        print('spelare ' + spelare + ' välj en tom plats på spelplanen igenom att trycka 0-8')
+        self.gui.setStatus('spelare ' + spelare + ' välj en tom plats på spelplanen igenom att trycka på den')
         return self.gui.getSegment()
         
         
@@ -84,12 +93,12 @@ class Game:
         
         #definera spelplanen
         board = ['*']*9
-
-        print('Välkommen till luffarschack')
         tur = 0
         spelare = 'x'
         self.gui = GUI()
         self.gui.createGrid()
+        print('Välkommen till luffarschack')
+        
         #visa spelplanen för spelarna
         self.playingField(board)
 
