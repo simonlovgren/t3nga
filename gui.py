@@ -85,7 +85,9 @@ class GUI:
             self.createStatus(text)
         else:
             self.gameStatus.setText(text)
-            self.w.update()
+    
+    def update(self):
+        self.w.update()
     
 if __name__ == "__main__":
     gui = GUI()
@@ -93,5 +95,7 @@ if __name__ == "__main__":
     while True:
         gui.setStatus("X's turn")
         gui.addSymbol(gui.getSegment(), "X", "blue")
+        gui.update()
         gui.setStatus("O's turn")
         gui.addSymbol(gui.getSegment(), "O", "red")
+        gui.update()
