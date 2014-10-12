@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import socket
-
+import http.server
 
 #WIP#
 class NetworkListener:
@@ -54,3 +54,8 @@ class mysocket:
                 raise RuntimeError("socket connection broken")
             msg = msg + chunk
         return msg
+s = mysocket()
+s.connect("130.238.95.2", 22500)
+mysend("hej simon")
+
+print(myreceive())
