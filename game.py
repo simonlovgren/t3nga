@@ -19,6 +19,7 @@ class Game:
         #loopa tills man antingen fått ett svar y dvs spela en ny omgång eller n ingen ny omgång. exit ifall nej, nyttspel ifall y
         while 1:
             if YellerN == 'y':
+                self.gui.close()
                 self.start()
             elif YellerN == 'n':
                 exit()
