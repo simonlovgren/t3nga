@@ -5,8 +5,9 @@ import math
 class GUI:
     def __init__(self):
         self.width = 500
-        self.height = 500
-        self.grid = [3,3] #Gridsize [x,y]
+        self.height = 600
+        self.board = [500, 500] #Board size [x,y]
+        self.grid = [10,10] #Gridsize [x,y]
         self.segments = []
         
         self.createWindow()
@@ -17,8 +18,8 @@ class GUI:
         
     def createGrid(self):
         # Calculate step height- and width in pixels
-        xstep = self.width / self.grid[0] 
-        ystep = self.height / self.grid[1]
+        xstep = self.board[0] / self.grid[0] 
+        ystep = self.board[1] / self.grid[1]
         
         # Loop for each row
         seg = 0 #initial segment in list
@@ -30,7 +31,7 @@ class GUI:
             xpos = 0 #initial x position
             while col < self.grid[0]:
                 r = Rectangle(Point(xpos, ypos), Point(round(xpos+xstep), round(ypos+ystep)))
-                r.setFill("red")
+                #r.setFill("red")
                 r.draw(self.w)
                 self.segments.append(r)
                 xpos = round(xpos+xstep)
@@ -64,8 +65,33 @@ class GUI:
     
         return p.getX() > smallx and p.getX() < bigx and p.getY() > smally and p.getY() < bigy
     
+    def addSymbol(self, segID, symbol, color):
+        t = Text(self.segments[segID].getCenter(), symbol)
+        t.setSize(36)
+        t.setTextColor(color)
+        t.draw(self.w)
+        self.w.update()
+    
+    def createStatus(self, text):
+        fontSize = 20
+        margin = 20
+        self.gameStatus = Text(Point(self.width/2, self.height-fontSize-margin), text)
+        self.gameStatus.setSize(fontSize)
+        self.gameStatus.draw(self.w)
+        self.w.update()
+        
+    def setStatus(self, text):
+        if not hasattr(self, 'gameStatus'):
+            self.createStatus(text)
+        else:
+            self.gameStatus.setText(text)
+            self.w.update()
+    
 if __name__ == "__main__":
     gui = GUI()
     gui.createGrid()
     while True:
-        print(gui.getSegment())
+        gui.setStatus("X's turn")
+        gui.addSymbol(gui.getSegment(), "X", "blue")
+        gui.setStatus("O's turn")
+        gui.addSymbol(gui.getSegment(), "O", "red")
