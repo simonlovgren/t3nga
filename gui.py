@@ -63,9 +63,9 @@ class GUI:
         bigy   = max(p1.getY(), p2.getY())
     
         return p.getX() > smallx and p.getX() < bigx and p.getY() > smally and p.getY() < bigy
-        
-gui = GUI()
-gui.createGrid()
-print(gui.segments)
-while True:
-    print(gui.getSegment())
+    
+if __name__ == "__main__":
+    gui = GUI()
+    gui.createGrid()
+    while True:
+        print(gui.getSegment())
