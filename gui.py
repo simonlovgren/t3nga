@@ -7,7 +7,7 @@ class GUI:
         self.width = 500
         self.height = 600
         self.board = [500, 500] #Board size [x,y]
-        self.grid = [10,10] #Gridsize [x,y]
+        self.grid = [3,3] #Gridsize [x,y]
         self.segments = []
         
         self.createWindow()
