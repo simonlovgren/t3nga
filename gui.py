@@ -88,6 +88,9 @@ class GUI:
     
     def update(self):
         self.w.update()
+        
+    def close():
+        self.w.close()
     
 if __name__ == "__main__":
     gui = GUI()
