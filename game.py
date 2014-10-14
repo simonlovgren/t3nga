@@ -11,9 +11,11 @@ class Game:
         
         for i in range(0,9):
             if board[i] == 'x':
-                self.gui.addSymbol(i, 'X', 'blue')
+                self.gui.addMarker(i, 0)
             elif board[i] == 'o':
-                    self.gui.addSymbol(i, 'O', 'red') 
+                self.gui.addMarker(i, 1) 
+
+        self.gui.update()
                        
     def newGame(self,YellerN):
 
@@ -73,7 +75,7 @@ class Game:
         
         print('spelare ' + spelare + ' välj en tom plats på spelplanen igenom att trycka 0-8')
         self.gui.setStatus('spelare ' + spelare + ' välj en tom plats på spelplanen igenom att trycka på den')
-        return self.gui.getSegment()
+        return self.gui.waitForBoard()
         
         
         
@@ -90,15 +92,6 @@ class Game:
             else:
                 board[var] = spelare
                 return board
-    
-    #avgör om spelare är människa eller bot
-    def turingTest(self):
-        while True:
-            val = input()
-            if val == "människa":
-                return 0
-            elif val == "bot":
-                return 1
 
     def twoRow(self, board, koll, testa):
         spe = 0
@@ -169,13 +162,19 @@ class Game:
         tur = 0
         spelare = 'x'
         self.gui = GUI()
-        self.gui.createGrid()
-        print('Välkommen till luffarschack')
-        intelligens = []
-        for _ in range(0,2):
-            intelligens.append(self.turingTest())
+        self.gui.createWindow()
+        self.gui.createStatus("välkommen till luffarschack")
+        self.gui.createMenu(["Human vs AI", "PvP"], 100)
+        self.gui.update()
+        select = self.gui.waitForMenu()
+        if select == 0:
+            intelligens = [0, 1]
+        elif select == 1:
+            intelligens = [0, 0]
         #visa spelplanen för spelarna
         self.playingField(board)
+        self.gui.createBoard()
+        self.gui.update()
 
         #mainloop i spelet
         while True:
