@@ -1,9 +1,11 @@
-T3NGa: Python Project
+T3NGa: Python Project (Documentation: WIP)
 =====================
 **T3NGa** is created as a project during an introductory course in IT and Compyter Science. **T3NGa** stands for **T**ic-**T**ac-**T**oe **N**etwork **Ga**me, as it is a LAN-enabled version of tic-tac-toe created in Python.
 
-###GUI 
-gui.py is the main code for the grapical user interface. It is built with multiple classes for easy implementation in the logic part of the code, abstracting `graphics.py` yet another step specific for this application.
+**OBS! The documentation is a work in progress.**
+
+###GUI (*class*)
+gui.py is the main code for the grapical user interface. It is built with multiple classes for easy implementation in the logic part of the code, abstracting `graphics.py` yet another step specific for this application. The GUI class is the only interface to be used by the logic part of the code.
 ```
 #!python
 gui = GUI()
@@ -143,3 +145,92 @@ gui.addMarker(2, 0)
 | ----------------- |--------------	| ----------| ------------------| ----------------------------------------------------------------------------	|
 | `segID`			| Int			| Yes		| N/A				| Segment ID where marker should be placed. Segment ID:s start on 0.			|
 | `player` 			| Int			| Yes		| N/A				| Player placing marker (marker type). `0` = X, `1` = O 						|
+
+
+
+#### GUI.waitForBoard() `Integer`
+Awaits user clicking on a clickable segment on the board. Returns ID of segment (`segID`), starting on `0`.
+```
+#!python
+clickedSegmentID = gui.waitForBoard()
+```
+
+
+###Status (*class*)
+`Status` is used as a wrapper for the on-screen text-status area.
+```
+#!python
+status = Status()
+```
+
+| Method	    								| Description                   					   						|
+| --------------------------------------------- | -------------------------------------------------------------------------	|
+| `__init__()` 									| Sets up default variables for the `Status` object.						|
+
+
+
+
+
+
+###BaseElement (*class*)
+`BaseElement` is the base class for most (new) graphics objects and contain the shared (common) methods of the new graphics objects. `BaseElement` is not used directly, but rather used as parent to the new graphics objects.
+```
+#!python
+# Extending newGraphicsObject with BaseElement
+class MyGraphObj(BaseElement):
+	def __init__(self):
+		print("myGraphObj created")
+
+mgo = MyGraphObject()
+```
+
+| Method	    								| Description                   					   						|
+| --------------------------------------------- | -------------------------------------------------------------------------	|
+| `inRectangle(rect, p)` 						| Checks whether `<Point> p` is inside `<Rectangle> rect` or not.			|
+| `getTarget(p, elements)`       				| Checks whether `<Point> p` is inside any of the supplied `<List>elements`.|
+
+
+#### BaseElement.inRectangle(rect, p) `Boolean`
+Checks whether `<Point>p` is inside `<Rectangle>rect` or not.
+```
+#!python
+r = Rectangle(Point(0, 0), Point(100, 100))
+p = Point(50, 50)
+if mgo.inRectangle(r, p): # Returns True in this case
+	print("Point P is inside rectangle R")
+```
+##### Parameters
+| Parameter			| Type			| Required	| Default			| Description 																	|
+| ----------------- |--------------	| ----------| ------------------| ----------------------------------------------------------------------------	|
+| `rect`			| Rectangle		| Yes		| N/A				| `Rectangle` object from `graphics.py` to check against.						|
+| `p`	 			| Point			| Yes		| N/A				| `Point` to check.																|
+
+
+#### BaseElement.getTarget(p, elements) `Integer` `None`
+Walks through list of rectangular graphics objects and checks if `<Point>p` is inside any one of them. Returns `None` if no element was the target of the click (`Point`).
+```
+#!python
+rectangles = [
+Rectangle(Point(0, 0), Point(50, 100),	
+Rectangle(Point(50, 0), Point(100, 100)
+]
+p = Point(75, 50)
+
+target = mgo.getTarget(p, rectangles)
+print(target) # 1
+```
+##### Parameters
+| Parameter			| Type			| Required	| Default			| Description 																	|
+| ----------------- |--------------	| ----------| ------------------| ----------------------------------------------------------------------------	|
+| `p`	 			| Point			| Yes		| N/A				| `Point` to check.																|
+| `elements`		| List<Elements>| Yes		| N/A				| List of rectangular graphics elements to check `Point` against.				| 
+
+
+###Board (*class*)
+**Documentation under construction.**
+
+###Menu (*class*)
+**Documentation under construction.**
+
+###Button (*class*)
+**Documentation under construction.**
