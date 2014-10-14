@@ -1,3 +1,4 @@
+from random import randint
 from gui import *
 
 class Game:
@@ -89,7 +90,78 @@ class Game:
             else:
                 board[var] = spelare
                 return board
+    
+    #avgör om spelare är människa eller bot
+    def turingTest(self):
+        while True:
+            val = input()
+            if val == "människa":
+                return 0
+            elif val == "bot":
+                return 1
 
+    def twoRow(self, board, koll, testa):
+        spe = 0
+        tom = 0
+        for i in koll:
+            if board[i] == testa:
+                spe += 1
+            elif board[i] == '*':
+                spe += 3
+                tom = i
+        if spe == 5:
+            return tom
+
+        return -1
+
+    def ai(self, spelare, board):
+         
+        koll = []
+        
+        for a in range(0, 2):
+            if a == 0:
+                testa = spelare
+            else:
+                if spelare == 'x':
+                    testa = 'o'
+                else:
+                    testa = 'x'
+
+            for i in [0, 3, 6]:
+                koll = [i, i + 1, i + 2]
+                if self.twoRow(board, koll, testa) >= 0:
+                    board[self.twoRow(board, koll, testa)] = spelare
+                    print(spelare, ':')
+                    return board
+
+            for i in [0, 1, 2]:
+                koll = [i, i + 3, i + 6]
+                if self.twoRow(board, koll, testa) >= 0:
+                    board[self.twoRow(board, koll, testa)] = spelare
+                    print(spelare, ':')
+                    return board
+
+            if self.twoRow(board, [0, 4, 8], testa) >= 0:
+                print(board)
+                board[self.twoRow(board, [0, 4, 8], testa)] = spelare
+                print(spelare, ':')
+                print(self.twoRow(board, [0, 4, 8], testa))
+                return board
+
+            if self.twoRow(board, [2, 4, 6], testa) >= 0:
+                board[self.twoRow(board, [0, 4, 8], testa)] = spelare
+                print(spelare, ':')
+                return board
+        
+
+        print(board)
+        plats = []
+        for i in range(0, 9):
+            if board[i] == '*':
+                plats.append(i)
+        board[plats[randint(0, len(plats) -1)]] = spelare
+        return board
+    
     def start(self):
         
         #definera spelplanen
@@ -99,7 +171,9 @@ class Game:
         self.gui = GUI()
         self.gui.createGrid()
         print('Välkommen till luffarschack')
-        
+        intelligens = []
+        for _ in range(0,2):
+            intelligens.append(self.turingTest())
         #visa spelplanen för spelarna
         self.playingField(board)
 
@@ -115,8 +189,10 @@ class Game:
 
         
             #Gör ett drag
-            board = self.man(spelare, board)
-
+            if intelligens[tur] == 0:
+                board = self.man(spelare, board)
+            else:
+                board = self.ai(spelare, board)
 
             #visa spelplanen efter spelarens drag, kolla ifall spelaren har vunnit och öka tur med 1
             self.playingField(board)
