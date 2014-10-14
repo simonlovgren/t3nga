@@ -18,6 +18,15 @@ class GUI:
     def handleClick(self):
         return self.w.getMouse()
     
+    def update(self):
+        self.w.update()
+
+    def refresh(self):
+        self.update()
+        
+    def close(self):
+        self.w.close()    
+    
     # ------------ Status Area --------------#
 
     def createStatus(self, text = ""):
@@ -46,18 +55,9 @@ class GUI:
             self.createStatus(text)
         else:
             self.gameStatus.text.setText(text)
-    
-    def update(self):
-        self.w.update()
-
-    def refresh(self):
-        self.update()
-        
-    def close(self):
-        self.w.close()
 
     # -------------- Create and maintain the menu ---------------- #
-    def createMenu(self, buttons, startY):
+    def createMenu(self, buttons, startY = 100):
         if self.display != None:
             self.display.undraw()
             self.display = None
@@ -193,7 +193,7 @@ class Board(BaseElement):
 
 ################# MENU #################
 class Menu(BaseElement):
-    def __init__(self, startY = 50, windowSize = [500, 500]):
+    def __init__(self, startY = 100, windowSize = [500, 500]):
         self.buttons = []
         self.windowSize = windowSize
         self.buttonStart = startY
