@@ -9,8 +9,8 @@ class GUI:
 
         self.display = None
 
-    def createWindow(self):
-        self.w = GraphWin("T3NGa", self.width, self.height, autoflush=False)
+    def createWindow(self, title="T3NGa"):
+        self.w = GraphWin(title, self.width, self.height, autoflush=False)
         self.w.setBackground("gray")
         self.w.configure(highlightthickness=0)
         self.w.update()
@@ -117,7 +117,7 @@ class BaseElement:
             if(self.inRectangle(element,p)):
                 return i
             i += 1 #Update index tracker
-        return False # Not click within element
+        return None # Not click within element
 
 
 ################# BOARD #################
