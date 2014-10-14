@@ -119,6 +119,7 @@ class Game:
                     testa = 'o'
                 else:
                     testa = 'x'
+                    print("varv två")
 
             for i in [0, 3, 6]:
                 koll = [i, i + 1, i + 2]
@@ -133,16 +134,14 @@ class Game:
                     board[self.twoRow(board, koll, testa)] = spelare
                     print(spelare, ':')
                     return board
-
+        
             if self.twoRow(board, [0, 4, 8], testa) >= 0:
-                print(board)
                 board[self.twoRow(board, [0, 4, 8], testa)] = spelare
                 print(spelare, ':')
-                print(self.twoRow(board, [0, 4, 8], testa))
                 return board
 
             if self.twoRow(board, [2, 4, 6], testa) >= 0:
-                board[self.twoRow(board, [0, 4, 8], testa)] = spelare
+                board[self.twoRow(board, [2, 4, 6], testa)] = spelare
                 print(spelare, ':')
                 return board
         
