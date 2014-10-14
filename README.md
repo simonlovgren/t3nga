@@ -4,6 +4,9 @@ T3NGa: Python Project (Documentation: WIP)
 
 **OBS! The documentation is a work in progress.**
 
+gui.py
+------
+
 ###GUI (*class*)
 gui.py is the main code for the grapical user interface. It is built with multiple classes for easy implementation in the logic part of the code, abstracting `graphics.py` yet another step specific for this application. The GUI class is the only interface to be used by the logic part of the code.
 ```
@@ -227,10 +230,23 @@ print(target) # 1
 
 
 ###Board (*class*)
-**Documentation under construction.**
+Documentation under construction.
 
 ###Menu (*class*)
-**Documentation under construction.**
+Documentation under construction.
 
 ###Button (*class*)
-**Documentation under construction.**
+Documentation under construction.
+
+
+game.py
+-------
+Documentation under construction.
+
+network.py
+----------
+Documentation under construction.
+
+init.py
+------
+Documentation under construction.
