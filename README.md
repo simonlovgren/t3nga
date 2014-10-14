@@ -9,8 +9,7 @@ GUI, *class* (gui.py)
 ---------------------
 gui.py is the main code for the grapical user interface. It is built with multiple classes for easy implementation in the logic part of the code, abstracting `graphics.py` yet another step specific for this application.
 
-```
-gui = GUI()
+```gui = GUI()
 
 ### createWindow([title])
 Creates a new graphics window.
