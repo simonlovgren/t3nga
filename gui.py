@@ -125,6 +125,7 @@ class Board(BaseElement):
     def __init__(self, board = [500, 500], grid = [3,3]):
         self.segments = [] # Empty list for clickable segments
         self.clickable = [] # Possibly used for storing calculated clickable areas
+        self.symbols = []
         self.board = board #Board size [x,y]
         self.grid = grid #Gridsize [x,y]
 
@@ -151,17 +152,7 @@ class Board(BaseElement):
             ypos = round(ypos+ystep)
             row += 1
 
-    # Method to wait for click on segment. Shoudl be re-made
-    def getSegment(self):
-        p = self.handleClick()
-        i = 0
-        for seg in self.segments:
-            if(self.inSegment(seg,p)):
-                return i
-            i += 1 #Update index tracker
-        return None # Not click within segment
 
-    
     def addSymbol(self, w, segID, player):
         if player == 0:
             symbol = "X"
@@ -173,6 +164,8 @@ class Board(BaseElement):
         t.setSize(36)
         t.setTextColor(color)
         t.draw(w)
+
+        self.symbols.append(t)
 
     def waitForClick(self, w):
         boardClicked = False
@@ -186,8 +179,12 @@ class Board(BaseElement):
 
 
     def undraw(self):
+        # Segments
         for segment in self.segments:
             segment.undraw()
+        # Symbols
+        for symbol in self.symbols:
+            symbol.undraw()
 
 
 
