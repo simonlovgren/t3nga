@@ -329,12 +329,12 @@ board = Board([500,500], [3,3])
 
 
 ###Button (*class*) `extends BaseElement`
-Documentation under construction.
-
+*Documentation under construction.*
 
 game.py
 -------
 `game.py` contains the class `Game` invoked in `init.py`, which holds the game logic and AI.
+
 *Documentation under construction.*
 
 network.py
