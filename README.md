@@ -214,8 +214,8 @@ Walks through list of rectangular graphics objects and checks if `<Point>p` is i
 ```
 #!python
 rectangles = [
-Rectangle(Point(0, 0), Point(50, 100),	
-Rectangle(Point(50, 0), Point(100, 100)
+Rectangle(Point(0, 0), Point(50, 100)),	
+Rectangle(Point(50, 0), Point(100, 100))
 ]
 p = Point(75, 50)
 
