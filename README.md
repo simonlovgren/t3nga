@@ -230,7 +230,7 @@ print(target) # 1
 
 
 ###Board (*class*) `extends BaseElement`
-The `Board` class is used for creating- and handeling the board created for use within `GUI`.
+The `Board` class is used to create- and handle the board created for use within `GUI`.
 ```
 #!python
 board = Board([500,500], [3,3])
@@ -242,7 +242,7 @@ board = Board([500,500], [3,3])
 | `createGrid(w)`       						| Generates game grid on supplied board size and supplied grid size.		|
 | `waitForClick(w)`								| Waits for the user to click on a clickable segment.						|
 | `addSymbol(w, segID, player)`					| Adds symbol to board on selected segment.									|
-| `undraw()`									| Undraws all graphics objects used in board.							 	|
+| `undraw()`									| Undraws all graphics objects used in instance of `board`.							 	|
 
 
 
@@ -310,21 +310,37 @@ Undraws all objects associated with `Board`. **Use when creating/drawing new vie
 board.undraw()
 ```
 
-###Menu (*class*)
-Documentation under construction.
+###Menu (*class*) `extends BaseElement`
+The `Menu` class is used to easily create- and hande basic graphic menus.
+```
+#!python
+board = Board([500,500], [3,3])
+```
 
-###Button (*class*)
+| Method	    									| Description                   					   						|
+| ------------------------------------------------- | -------------------------------------------------------------------------	|
+| `__init__(startY = 100, windowSize = [500,500])`	| Creates an instance of `Menu` and prepares internal variables.			|
+| `addButtons(buttons, w)`       					| Adds buttons in a vertical list.											|
+| `waitForClick(w)`									| Waits for the user to click on a button.									|
+| `undraw()`										| Undraws all graphics objects used in instance of `Menu`.				 	|
+
+
+*Documentation under construction.*
+
+
+###Button (*class*) `extends BaseElement`
 Documentation under construction.
 
 
 game.py
 -------
-Documentation under construction.
+`game.py` contains the class `Game` invoked in `init.py`, which holds the game logic and AI.
+*Documentation under construction.*
 
 network.py
 ----------
-Documentation under construction.
+*Documentation under construction.*
 
 init.py
 ------
-Documentation under construction.
+*Documentation under construction.*

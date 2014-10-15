@@ -182,9 +182,11 @@ class Board(BaseElement):
         # Segments
         for segment in self.segments:
             segment.undraw()
+        self.segments = []
         # Symbols
         for symbol in self.symbols:
             symbol.undraw()
+        self.symbols = []
 
 
 
