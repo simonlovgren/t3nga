@@ -75,6 +75,7 @@ class Game:
             koll = []
 
         #kolla diagonalerna
+        
         self.winRow(board, spelare, [0, 4, 8])
         self.winRow(board, spelare, [2, 4, 6])
 
