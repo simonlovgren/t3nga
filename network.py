@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import socket
-import http.server
+import sys
+#import http.server
 
 #WIP#
 class NetworkListener:
