@@ -1,3 +1,4 @@
+
 from random import randint
 from gui import *
 
@@ -9,12 +10,11 @@ class Game:
         print(board[3:6])
         print(board[6:])
         
-        for i in range(0,9):
+        for i in  range(0, len(board)):
             if board[i] == 'x':
                 self.gui.addMarker(i, 0)
             elif board[i] == 'o':
                 self.gui.addMarker(i, 1) 
-
         self.gui.update()
                        
     def newGame(self,YellerN):
@@ -50,17 +50,24 @@ class Game:
         self.gui.setStatus('grattis ' + spelare + ' du har vunnit, vill du spela igen y/n?\n')
         self.newGame(input())
         
-    def winCheck(self, board, spelare):
+    def winCheck(self, board, spelare, height, width):
 
-        #kolla dem vågrätta raderna igenom att spara dem i koll och sedan skicka brädet till vinnarrad som kollar ifall raden innehåller en vinst
-        for i in [0, 3, 6]:
-            koll = [i, i + 1, i + 2]
+        koll = []
+        for i in range(0, height):
+            i *= width
+            for j in range(0, width):
+                koll.append(i+j)
             self.winRow(board, spelare, koll)
+            koll = []
 
         #kolla dem lodräta raderna igenom att spara dem i koll och sedan skicka brädet till vinnarrad som kollar ifall raden innehåller en vinst
-        for i in [0, 1, 2]:
-            koll = [i, i + 3, i + 6]
+
+        for i in range(0, width):
+            for j in range(0, height):
+                koll.append(i+(j*width))
             self.winRow(board, spelare, koll)
+            koll = []
+
 
         #kolla diagonalerna
         self.winRow(board, spelare, [0, 4, 8])
@@ -157,7 +164,10 @@ class Game:
     def start(self):
         
         #definera spelplanen
-        board = ['*']*9
+                #definera spelplanen
+        height = 3
+        width = 3
+        board = ['*']*(height*width)
         tur = 0
         spelare = 'x'
         self.gui = GUI()
@@ -172,7 +182,7 @@ class Game:
             intelligens = [0, 0]
         #visa spelplanen för spelarna
         self.playingField(board)
-        self.gui.createBoard()
+        self.gui.createBoard([500,500],[height,width])
         self.gui.update()
 
         #mainloop i spelet
@@ -194,5 +204,5 @@ class Game:
 
             #visa spelplanen efter spelarens drag, kolla ifall spelaren har vunnit och öka tur med 1
             self.playingField(board)
-            self.winCheck(board, spelare)
+            self.winCheck(board, spelare, height, width)
             tur += 1
