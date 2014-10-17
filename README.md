@@ -1,5 +1,5 @@
 T3NGa: Python Project (Documentation: WIP)
-=====================
+==========================================
 **T3NGa** is created as a project during an introductory course in IT and Compyter Science. **T3NGa** stands for **T**ic-**T**ac-**T**oe **N**etwork **Ga**me, as it is a LAN-enabled version of tic-tac-toe created in Python.
 
 **OBS! The documentation is a work in progress.**
@@ -314,7 +314,7 @@ board.undraw()
 The `Menu` class is used to easily create- and hande basic graphic menus.
 ```
 #!python
-board = Board([500,500], [3,3])
+menu = Menu()
 ```
 
 | Method	    									| Description                   					   						|
@@ -325,7 +325,47 @@ board = Board([500,500], [3,3])
 | `undraw()`										| Undraws all graphics objects used in instance of `Menu`.				 	|
 
 
-*Documentation under construction.*
+#### Menu.__init__(startY = 100, windowSize = [500,500]) `Menu`
+Returns an instance of `Menu` and prepares internal variables.
+```
+#!python
+# To specify startingpoint on Y-axis as well as window size:
+menu = Menu(100, [500,500]) # Menu starts at 100px on y-axis in percieved window of 500x500px
+```
+##### Parameters
+| Parameter			| Type			| Required	| Default			| Description 																	|
+| ----------------- |--------------	| ----------| ------------------| ----------------------------------------------------------------------------	|
+| `startY` 			| Integer		| No		| 100				| Starting point of menu on Y-axis.												|
+| `windowSize`		| Integer		| No		| [500,500]			| Size of window (or part of window) where menu is to be displayed.				|
+
+
+#### Menu.addButtons(buttons, w) `Void`
+Adds buttons in a vertical list starting on `startY`. `GUI.update()` **needs to be called for changes to show.**
+```
+#!python
+w = GraphWin(title, self.width, self.height, autoflush=False) # Create GraphWin
+menu.addButtons(["Button one", "Button two"], w) # Add buttons with labels "Button One" and "Button two" to GraphWin w
+```
+##### Parameters
+| Parameter			| Type			| Required	| Default			| Description 																	|
+| ----------------- |--------------	| ----------| ------------------| ----------------------------------------------------------------------------	|
+| `buttons` 		| List<String>	| Yes		| N/A				| List of button labels (Strings). Buttons will be assigned ID:s starting on 0 as in the list itself	|
+| `w`	 			| GraphWin		| Yes		| N/A				| GraphWin in which buttons are to be drawn.									|
+
+
+#### Menu.waitForClick() `Integer`
+Awaits user clicking on an available button.
+```
+#!python
+clickedButtonID = menu.waitForClick() # OR clickedButtonID = gui.waitForMenu()
+```
+
+#### Menu.undraw() `Void`
+Undraws all objects associated with `Menu`. **Use when creating/drawing new view** (Automatically invoked in `GUI`).
+```
+#!python
+menu.undraw()
+```
 
 
 ###Button (*class*) `extends BaseElement`
