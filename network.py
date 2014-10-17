@@ -2,6 +2,14 @@
 import socket
 import http.server
 
+'''
+############################################################
+	Work on network version has been relayed to a branch
+	called "lan-version" as to not disturb the actual
+	(working) local version of the game. 
+############################################################
+'''
+
 #WIP#
 class NetworkListener:
     
