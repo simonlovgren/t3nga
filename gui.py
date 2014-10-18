@@ -274,7 +274,7 @@ if __name__ == "__main__":
     gui.update()
 
     # Add board
-    gui.createMenu(["Button one", "Start Game", "Button one", "Button two", "Button one", "Button two"], 100)
+    gui.createMenu(["Test Board", "Test input"], 100)
 
     # Update status
     gui.setStatus("Welcome traveller!")
@@ -282,8 +282,8 @@ if __name__ == "__main__":
     # Update/Refresh GUI after making changes
     gui.update()
 
-    m = False
-    while m != 1:
+    m = None
+    while m == None:
         # Wait for menu click
         m = gui.waitForMenu()
 
@@ -291,19 +291,38 @@ if __name__ == "__main__":
         gui.setStatus("You clicked button #" + str(m+1) + " ("+str(m)+")")
         gui.update()
 
-    # if click 2, create and listen to board
-    gui.createBoard()
+    # Evaluate test selection
+    # Board test
+    if m == 0:
+        gui.createBoard()
+        gameOn = True
+        while gameOn:
+            # Wait for menu click
+            m = gui.waitForBoard()
 
-    gameOn = True
-    while gameOn:
-        # Wait for menu click
-        m = gui.waitForBoard()
+            gui.addMarker(m, 1)
 
-        gui.addMarker(m, 1)
+            # Print what has been clicked
+            gui.setStatus("You clicked segment #" + str(m+1) + " ("+str(m)+")")
+            gui.update()
 
-        # Print what has been clicked
-        gui.setStatus("You clicked segment #" + str(m+1) + " ("+str(m)+")")
+    # Input test
+    elif m == 1:
+        inp = Entry(Point(500/2, 100), 40)
+        inp.setTextColor('gray50')
+        inp.setFill('white')
+        inp.draw(gui.w)
+        gui.display.undraw()
         gui.update()
+
+        text = ""
+        while text != "end":
+            print(gui.w.getMouse())
+            gtext = inp.getText()
+            if text != gtext:
+                gui.setStatus(gtext)
+                text = gtext
+
 
 
 

@@ -2,6 +2,7 @@
 import socket
 import sys
 import re
+import random
 
 # Base communications class
 class BaseSocket:
@@ -66,7 +67,7 @@ class MasterSocket(BaseSocket):
             data = self.conn.recv(buff)
         except OSError as msg:
             return False
-        return data
+        return data.decode('utf-8')
 
 ## Client Socket ##
 class SlaveSocket(BaseSocket):
@@ -96,7 +97,23 @@ class SlaveSocket(BaseSocket):
             data = self.socket.recv(buff)
         except OSError as msg:
             return False
-        return data
+        return data.decode('utf-8')
+
+# Class for parsing data
+class DataParser():
+
+    def parseData(self, rawData):
+        data = rawData.split(":")
+        return Data(data)
+
+    def packData(self, command, content):
+        return ":".join([command, content])
+        
+# Wrapper for parsed data
+class Data:
+    def __init__(self, data):
+        self.command = data[0]
+        self.content = data[1]
 
 
 
@@ -115,7 +132,7 @@ def isIP(test):
 
 ###### TEST ######
 if __name__ == "__main__":
-
+    '''
     sel = None
     while sel != "s" and sel != "c":
         sel = input('server (s) or client (c)?')
@@ -183,10 +200,10 @@ if __name__ == "__main__":
 
         while listening:
             data = sock.recieve() # Retrieve data
-            print(data.decode('utf-8'))
-            sock.send(data.decode('utf-8')) # Send data back
+            print(data)
+            sock.send(data) # Send data back
             # Evaluate kill command
-            if data.decode('utf-8') == "killserver":
+            if data == "killserver":
                 sock.send("Server shutting down...")
                 break
 
@@ -243,12 +260,19 @@ if __name__ == "__main__":
                 break
             sock.send(tosend) # Send data
             data = sock.recieve()
-            print("Response: " + data.decode("utf-8"))
+            print("Response: " + data)
         print("Closing connection")
         sock.close()
+    '''
+    # Test parser
+    random.seed()
 
-
-
+    ack = "ACK:" + str(random.randint(5510,685447))
+    parser = DataParser()
+    data = parser.parseData(ack)
+    print(data, "\r\ncommand: ", data.command, "\r\ncontent: ", data.content)
+    if data.command == "ACK":
+        print("answer: ", parser.packData("OK", data.content))
 
 
 

@@ -21,13 +21,14 @@ class Game:
         #loopa tills man antingen fått ett svar y dvs spela en ny omgång eller n ingen ny omgång. exit ifall nej, nyttspel ifall y
         while 1:
             if YellerN == 'y':
-                self.gui.close()
-                self.start()
+                self.start(True)
             elif YellerN == 'n':
                 exit()
 
             YellerN = input('felaktig input, vill du spela igen y/n?\n')
-            
+
+    ######## DUPLICATE METHODS start() ###########
+    '''
     def start(self, start):
         #loopa tills man antingen fått ett svar y dvs spela en ny omgång eller n ingen ny omgång. exit ifall nej, nyttspel ifall y
         while True:
@@ -37,6 +38,8 @@ class Game:
                 exit()
 
             YellerN = input('felaktig input, vill du spela igen y/n?\n')
+    '''
+    ####### EOF DUP START #######
 
     def winRow(self, board, spelare, koll):
 
@@ -160,48 +163,75 @@ class Game:
         board[plats[randint(0, len(plats) -1)]] = spelare
         return board
     
-    def start(self):
+    def start(self, restart = False):
         
         #definera spelplanen
-                #definera spelplanen
-        height = 5
-        width = 5
-        board = ['*']*(height*width)
-        tur = 0
-        spelare = 'x'
-        self.gui = GUI()
-        self.gui.createWindow()
-        self.gui.createStatus("välkommen till luffarschack")
-        self.gui.createMenu(["Human vs AI", "PvP"], 100)
+        self.height = 3
+        self.width = 3
+        self.board = ['*']*(self.height*self.width)
+
+        self.tur = 0
+        self.spelare = 'x'
+
+        # Start GUI
+        if not restart:
+            self.gui = GUI()
+            self.gui.createWindow()
+            self.gui.createStatus("välkommen till luffarschack")
+        else:
+            self.gui.setStatus("välkommen till luffarschack")
+        self.gui.createMenu(["Human vs AI", "PvP", "Create LAN Game", "Join LAN Game"], 100)
         self.gui.update()
+
         select = self.gui.waitForMenu()
         if select == 0:
             intelligens = [0, 1]
+            self.localGame(intelligens)
         elif select == 1:
             intelligens = [0, 0]
+            self.localGame(intelligens)
+        elif select == 2:
+            self.createNetworkGame()
+        elif select == 2:
+            self.joinNetworkGame()
+
+    #### Local game loop
+    def localGame(self, intelligens):
         #visa spelplanen för spelarna
-        self.playingField(board)
-        self.gui.createBoard([500,500],[height,width])
+        self.playingField(self.board)
+        self.gui.createBoard([500,500],[self.height,self.width])
         self.gui.update()
 
         #mainloop i spelet
         while True:
 
             #hoppa mellan spelare 0 som spelar som x och spelare 1 som spelar som o
-            tur %= 2
-            if tur == 0:
-                spelare = 'x'
+            self.tur %= 2
+            if self.tur == 0:
+                self.spelare = 'x'
             else:
-                spelare = 'o'
+                self.spelare = 'o'
 
         
             #Gör ett drag
-            if intelligens[tur] == 0:
-                board = self.man(spelare, board)
+            if intelligens[self.tur] == 0:
+                self.board = self.man(self.spelare, self.board)
             else:
-                board = self.ai(spelare, board)
+                self.board = self.ai(self.spelare, self.board)
 
             #visa spelplanen efter spelarens drag, kolla ifall spelaren har vunnit och öka tur med 1
-            self.playingField(board)
-            self.winCheck(board, spelare, height, width)
-            tur += 1
+            self.playingField(self.board)
+            self.winCheck(self.board, self.spelare, self.height, self.width)
+            self.tur += 1
+
+
+
+
+    ##### Network Game
+    def createNetworkGame(self):
+        print("Create Network Game")
+        pass
+
+    def joinNetworkGame(self):
+        print("Create Network Game")
+        pass
