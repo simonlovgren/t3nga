@@ -164,8 +164,8 @@ class Game:
         
         #definera spelplanen
                 #definera spelplanen
-        height = 3
-        width = 3
+        height = 5
+        width = 5
         board = ['*']*(height*width)
         tur = 0
         spelare = 'x'
