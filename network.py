@@ -54,6 +54,7 @@ class MasterSocket(BaseSocket):
     # Send data to connected computer. Return BOOLEAN
     def send(self, message):
         try:
+            message = bytes(message, "utf-8")
             self.conn.send(message)
         except OSError as msg:
             return False
@@ -109,6 +110,8 @@ def isPort(test):
 def isIP(test):
     regx = r'[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}'
     return re.match(regx, test) != None
+
+
 
 ###### TEST ######
 if __name__ == "__main__":
@@ -174,17 +177,18 @@ if __name__ == "__main__":
             sock.close()
             sys.exit(1)
 
-        print("Accepting clients")
+        print("User connected from: " + str(sock.addr[0]))
 
-        print("Waiting for connection")
+        print("Waiting for request")
 
         while listening:
             data = sock.recieve() # Retrieve data
             print(data.decode('utf-8'))
-            sock.send(data) # Send data back
+            sock.send(data.decode('utf-8')) # Send data back
             # Evaluate kill command
             if data.decode('utf-8') == "killserver":
-                listening = False
+                sock.send("Server shutting down...")
+                break
 
         sock.close()
 
