@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from graphics import *
 import math
+import re
 
 class GUI:
     def __init__(self):
@@ -79,6 +80,20 @@ class GUI:
         self.display.addSymbol(self.w, segID, player)
 
     def waitForBoard(self):
+        return self.display.waitForClick(self.w)
+
+    # ------------------- Network game --------------------------#
+    def networkJoinForm(self):
+        if self.display != None:
+            self.display.undraw()
+            self.display = None
+
+        self.display = NetworkJoinForm(self.w)
+
+    def joinNetworkFormData(self):
+        return self.display.getData()
+
+    def waitForJoinForm(self):
         return self.display.waitForClick(self.w)
 
     # ------------------- Deprecated functions -------------------- #
@@ -257,6 +272,120 @@ class Button(BaseElement):
     def undraw(self):
         self.rectangle.undraw()
         self.text.undraw()
+    
+    def waitForClick(self, w):
+        buttonClicked = False
+        eID = None
+        while not buttonClicked:
+            p = w.getMouse()
+            eID = self.getTarget(p, [self.rectangle])
+            if(eID != None):
+                buttonClicked = True
+        return True
+
+
+################# input #################
+class Input(BaseElement):
+    def __init__(self, label="Label", default="", width=20, center=Point(0,0), labelColor="gray15", textColor="gray25", fill="white"):
+        
+
+        # Set up input area
+        self.input = Entry(center, width)
+        self.input.setTextColor(textColor)
+        self.input.setFill(fill)
+        self.input.setSize(13)
+
+        # Set up label
+        self.text = Text(center, label)
+        self.text.setTextColor(labelColor)
+
+        # Reposition elements
+        self.input.move(0,20) # Move input below label
+
+        # Insert default data
+        if str(default) != "":
+            self.input.setText(default)
+
+    def getText(self):
+        return self.input.getText()
+
+    def setFill(self, color):
+        self.input.setFill(color)
+
+    def setTextColor(self, color):
+        self.input.setTextColor(color)
+
+    def draw(self, w):
+        self.input.draw(w)
+        self.text.draw(w)
+
+    def undraw(self):
+        self.input.undraw()
+        self.text.undraw()
+
+
+########### Network Join Form ###########
+class NetworkJoinForm(BaseElement):
+
+    def __init__(self, w, startY=100):
+        self.ip = Input(label="IP address", default="127.0.0.1", width=15, center=Point(250,startY))
+        self.port = Input(label="Port", default="22500", width=5, center=Point(250,startY+50))
+        self.bt = Button(Point(250-50, startY+100), Point(250+50, startY+125), "Join", color="gray10", textColor = "gray90")
+
+        self.ip.draw(w)
+        self.port.draw(w)
+        self.bt.draw(w)
+
+    def undraw(self):
+        self.ip.undraw()
+        self.port.undraw()
+        self.bt.undraw()
+
+    def getData(self):
+        return (self.ip.getText(), self.port.getText())
+
+    def highlightField(self, field):
+        field.setFill('pink1')
+        field.setTextColor('red')
+
+    def unHighlightField(self, field):
+        field.setFill('white')
+        field.setTextColor('gray10')
+
+    def waitForClick(self, w):
+        ip = ""
+        port = ""
+        check = DataCheck()
+        while not check.ip(ip) or not check.intInRange(port):
+            self.bt.waitForClick(w)
+            ip = self.ip.getText()
+            try:
+                port = int(self.port.getText())
+            except Exception as e:
+                port = None
+
+            if not check.ip(ip):
+                self.highlightField(self.ip)
+            else:
+                self.unHighlightField(self.ip)
+            if not check.intInRange(port):
+                self.highlightField(self.port)
+            else:
+                self.unHighlightField(self.port)
+
+        return (ip, port)
+
+############## FormCheck ##########
+class DataCheck():
+    def intInRange(self, test, min=0, max=999999):
+        try:
+            return (test > min and test < max)
+        except Exception:
+            return False
+
+    def ip(self, test):
+        regx = r'[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}'
+        return re.match(regx, test) != None
 
 if __name__ == "__main__":
     #Load GUI
@@ -308,6 +437,33 @@ if __name__ == "__main__":
 
     # Input test
     elif m == 1:
+        gui.networkJoinForm()
+        gui.update()
+
+        print(gui.waitForJoinForm())
+
+        '''
+        ip = Input(label="IP address", default="", width=15, center=Point(250,100))
+        ip.draw(gui.w)
+        port = Input(label="Port", default="22500", width=5, center=Point(250,150))
+        port.draw(gui.w)
+
+        bt = Button(Point(250-50, 200), Point(250+50, 225), "Join", color="gray10", textColor = "gray90")
+        bt.draw(gui.w)
+
+        gui.display.undraw()
+        gui.update()
+
+        ipi = ""
+        pi = ""
+        while not isIP(ipi) or not isPort(pi):
+            bt.waitForClick(gui.w)
+            ipi = ip.getText()
+            pi = int(port.getText())
+
+        print("Connect to: ", ipi, ":", pi)
+        '''
+        '''
         inp = Entry(Point(500/2, 100), 40)
         inp.setTextColor('gray50')
         inp.setFill('white')
@@ -322,8 +478,7 @@ if __name__ == "__main__":
             if text != gtext:
                 gui.setStatus(gtext)
                 text = gtext
-
-
+        '''
 
 
     '''

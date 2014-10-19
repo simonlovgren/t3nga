@@ -1,5 +1,6 @@
 from random import randint
 from gui import *
+import network, sys
 
 class Game:
     #def __init__(self):
@@ -180,7 +181,7 @@ class Game:
             self.gui.createStatus("välkommen till luffarschack")
         else:
             self.gui.setStatus("välkommen till luffarschack")
-        self.gui.createMenu(["Human vs AI", "PvP", "Create LAN Game", "Join LAN Game"], 100)
+        self.gui.createMenu(["Human vs AI", "PvP", "Create LAN Game", "Join LAN Game", "Exit game"], 100)
         self.gui.update()
 
         select = self.gui.waitForMenu()
@@ -192,8 +193,10 @@ class Game:
             self.localGame(intelligens)
         elif select == 2:
             self.createNetworkGame()
-        elif select == 2:
+        elif select == 3:
             self.joinNetworkGame()
+        else:
+            sys.exit()
 
     #### Local game loop
     def localGame(self, intelligens):
@@ -230,8 +233,76 @@ class Game:
     ##### Network Game
     def createNetworkGame(self):
         print("Create Network Game")
-        pass
+        server = network.MasterSocket(22500)
+        print('Your IP:', server.getIP())
+        print('Waiting for connection')
+        server.listen()
+        accept = False
+
+        self.gui.setStatus("Waiting for player.")
+        self.gui.update()
+
+        while not accept:
+            accept = server.startAcceptingClient()
+        print('Connection from', server.addr[0])
+        self.gui.setStatus("Player connected from " + server.addr[0])
+        self.gui.update()
+
+        # try ack
+        ack = False
+        tries = 3
+        randInt = randint(1574,677852)
+        while not ack and tries > 0:
+            server.send("ACK:" + str(randInt))
+            ackR = server.recieve()
+            ackR = network.DataParser.parseData((), ackR)
+            if ackR.command == "OK" and ackR.content == str(randInt):
+                ack = True
+                print("Client OK")
+
+            tries -= 1
+
+        # Client OK, randomize who starts
+        local = randint(0,1)
+        remote = int(not local)
+
+        server.send("PLAYER:" + str(remote))
+
+        server.close()
+        self.start(True) # Goto main menu
+        
 
     def joinNetworkGame(self):
-        print("Create Network Game")
-        pass
+        self.gui.networkJoinForm()
+        self.gui.update()
+
+        addr = self.gui.waitForJoinForm()
+
+        client = network.SlaveSocket(addr[1])
+        client.connect(addr[0])
+
+        # wait for ack
+        ack = False
+        tries = 3
+        while not ack and tries > 0:
+            ackR = client.recieve()
+            ackR = network.DataParser().parseData(ackR)
+
+            if ackR.command == "ACK":
+                ack = True
+
+            tries -= 1
+
+        print("Server ACK, sending OK")
+
+        client.send("OK:" + ackR.content)
+
+        # Wait for player assignment5
+        data = client.recieve()
+        print(data)
+        data = network.DataParser().parseData(data)
+
+        print(data.content)
+
+        client.close()
+        self.start(True) # goto main menu   

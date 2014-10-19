@@ -25,6 +25,18 @@ class BaseSocket:
     def close(self):
         self.socket.close()
 
+    # Try to display own IP
+    def getIP(self):
+        try:
+            ip = socket.gethostbyname(socket.gethostname())
+        except Exception as e:
+            ip = None
+
+        if ip == None or ip == "127.0.0.1" or ip == "0.0.0.0":
+            return None
+        else:
+            return ip
+
 ## Server Socket ##
 class MasterSocket(BaseSocket):
 
