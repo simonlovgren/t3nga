@@ -38,25 +38,31 @@ class Game:
 
             YellerN = input('felaktig input, vill du spela igen y/n?\n')
 
-    def winRow(self, board, spelare, koll):
+    def winRow(self, board, spelare, koll, xInRow):
 
+        counter = 0
         #Gå igenom dem rutorna som ska kollas, dvs rutorna i koll. Finns det någon ruta som innehåller något annat än spelarens tecken avsluta funktionen. Finns det bara spelarens tecken i koll så har spelaren vunnit.
-        for i in koll:
-            if board[i] is not spelare:
-                return None
+        for i in range(0, len(koll)):
+            if board[koll[i]] is not spelare:
+                counter = 0
+            else:
+                counter += 1
+                print(counter)
+            if counter >= xInRow:
+                print('grattis ' + spelare + ' du har vunnit, vill du spela igen y/n?\n')
+                self.gui.setStatus('grattis ' + spelare + ' du har vunnit, vill du spela igen y/n?\n')
+                self.newGame(input())
 
-        print('grattis ' + spelare + ' du har vunnit, vill du spela igen y/n?\n')
-        self.gui.setStatus('grattis ' + spelare + ' du har vunnit, vill du spela igen y/n?\n')
-        self.newGame(input())
+        return None
         
-    def winCheck(self, board, spelare, height, width):
+    def winCheck(self, board, spelare, height, width, xInRow):
 
         koll = []
         for i in range(0, height):
             i *= width
             for j in range(0, width):
                 koll.append(i+j)
-            self.winRow(board, spelare, koll)
+            self.winRow(board, spelare, koll, xInRow)
             koll = []
 
         #kolla dem lodräta raderna igenom att spara dem i koll och sedan skicka brädet till vinnarrad som kollar ifall raden innehåller en vinst
@@ -64,13 +70,23 @@ class Game:
         for i in range(0, width):
             for j in range(0, height):
                 koll.append(i+(j*width))
-            self.winRow(board, spelare, koll)
+            self.winRow(board, spelare, koll, xInRow)
+            koll = []
+
+        #kolla diagonalerna
+        for i in range(0, width-xInRow+1):
+            
+            for j in range(i, width-i):
+                if i > 0:
+                    koll.append(i)
+                koll.append(i+j*(width+1))
+                print(koll)
+            self.winRow(board, spelare, koll, xInRow)
             koll = []
 
 
-        #kolla diagonalerna
-        self.winRow(board, spelare, [0, 4, 8])
-        self.winRow(board, spelare, [2, 4, 6])
+        #self.winRow(board, spelare, [0, 4, 8], xInRow)
+        self.winRow(board, spelare, [2, 4, 6], xInRow)
 
         #om det inte finns någon tom ruta, dvs ingen ruta som innehåller '*' så är spelet oavgjort. Informera spelaren och fråga om en ny omgång
         if '*' not in board:
@@ -163,9 +179,9 @@ class Game:
     def start(self):
         
         #definera spelplanen
-                #definera spelplanen
-        height = 5
-        width = 5
+        xInRow = 2
+        height = 3
+        width = 3
         board = ['*']*(height*width)
         tur = 0
         spelare = 'x'
@@ -203,5 +219,5 @@ class Game:
 
             #visa spelplanen efter spelarens drag, kolla ifall spelaren har vunnit och öka tur med 1
             self.playingField(board)
-            self.winCheck(board, spelare, height, width)
+            self.winCheck(board, spelare, height, width, xInRow)
             tur += 1
