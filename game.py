@@ -167,8 +167,8 @@ class Game:
     def start(self, restart = False):
         
         #definera spelplanen
-        self.height = 3
-        self.width = 3
+        self.height = 5
+        self.width = 5
         self.board = ['*']*(self.height*self.width)
 
         self.tur = 0
@@ -236,10 +236,12 @@ class Game:
         server = network.MasterSocket(22500)
         print('Your IP:', server.getIP())
         print('Waiting for connection')
+
+
         server.listen()
         accept = False
 
-        self.gui.setStatus("Waiting for player.")
+        self.gui.setStatus("Waiting player connect to: " + server.getIP())
         self.gui.update()
 
         while not accept:
@@ -263,10 +265,98 @@ class Game:
             tries -= 1
 
         # Client OK, randomize who starts
-        local = randint(0,1)
-        remote = int(not local)
+        localPlayer = randint(0,1)
+        remotePlayer = int(not localPlayer)
 
-        server.send("PLAYER:" + str(remote))
+        # Send remote player
+        server.send("PLAYER:" + str(remotePlayer))
+
+        # Wait for OK
+        data = server.recieve()
+        data = network.DataParser().parseData(data)
+        if data.command == "OK":
+            print("Client OK")
+        else:
+            print("Client not responding")
+
+        # Send board
+        server.send("BOARD:" + ",".join(self.board))
+
+        # Wait for OK
+        data = server.recieve()
+        data = network.DataParser().parseData(data)
+        if data.command == "OK":
+            print("Client OK")
+        else:
+            print("Client not responding")
+
+        # Send grid
+        server.send("GRID:" + str(self.width) + "," + str(self.height))
+
+        # Wait for OK
+        data = server.recieve()
+        data = network.DataParser().parseData(data)
+        if data.command == "OK":
+            print("Client OK")
+        else:
+            print("Client not responding")
+
+        # Display board
+        self.gui.createBoard([500,500],[self.height,self.width])
+
+
+
+
+        turn = 0
+        playerTurn = 0
+        trials = 5
+        # Main game-server loop
+        while trials > 0:
+
+            # Check which player is to make a move
+            playerTurn = (turn % 2 == 0)
+
+            if(turn == localPlayer):
+                # Server's turn
+                self.gui.setStatus("Your turn!")
+                self.gui.update()
+
+                # Wait for input
+                move = None
+                while not self.validateMove(self.board, move):
+                    move = self.gui.waitForBoard()
+
+            else:
+                # Client's turn
+                server.send("MOVE:REMOTE")
+                self.gui.setStatus("Opponent's turn!")
+                self.gui.update()
+
+                # Wait for move
+                move = None
+                while not self.validateMove(self.board, move):
+                    move = server.recieve()
+                    move = network.DataParser.parseData(data).content
+
+                    if not self.validateMove(move):
+                        server.send("MOVE:INVALID")
+                server.send("MOVE:VALID")
+
+                print("Client move:", move)
+
+            trials -= 1
+
+            '''
+            #Gör ett drag
+            if intelligens[self.tur] == 0:
+                self.board = self.man(player, self.board)
+
+            #visa spelplanen efter spelarens drag, kolla ifall spelaren har vunnit och öka tur med 1
+            self.playingField(self.board)
+            self.winCheck(self.board, self.spelare, self.height, self.width)
+            self.tur += 1
+            '''
+
 
         server.close()
         self.start(True) # Goto main menu
@@ -288,8 +378,10 @@ class Game:
             ackR = client.recieve()
             ackR = network.DataParser().parseData(ackR)
 
-            if ackR.command == "ACK":
+            if ackR.command == "ACK" and ackR.content:
                 ack = True
+            else:
+                print("Ack failed")
 
             tries -= 1
 
@@ -297,12 +389,83 @@ class Game:
 
         client.send("OK:" + ackR.content)
 
-        # Wait for player assignment5
+        # Wait for player assignment
         data = client.recieve()
         print(data)
         data = network.DataParser().parseData(data)
 
+        player = data.content
+
+        # Send OK
+        client.send("OK:")
+
+        # Wait for board
+        data = client.recieve()
+        data = network.DataParser().parseData(data)
+
+        board = data.content.split(",")
+
+        # Send OK
+        client.send("OK:")
+
+        # Wait for grid
+        data = client.recieve()
+        data = network.DataParser().parseData(data)
+
         print(data.content)
 
+        grid = list(map(int, data.content.split(",")))
+        print(grid)
+
+        # Send OK
+        client.send("OK:")
+
+        # Display board
+        self.gui.createBoard([500,500],[grid[0], grid[1]])
+
+        self.gui.waitForBoard()
+        print(data.content)
+
+        # START ACTUAL GAME SESSION
+        gameOn = True
+
+        looped = False
+        while gameOn:
+            if not looped and player == 0:
+                self.gui.setStatus("Waiting for server!")
+            else:
+                self.gui.setStatus("Opponent's turn!")
+            self.gui.update()
+            # Wait for turn
+            myTurn = "SERVER"
+            while myTurn != "REMOTE":
+                turn = network.DataParser().parseData(client.recieve())
+                if turn.command == "TURN":
+                    myTurn = turn.content
+                print(myTurn)
+
+            self.gui.setStatus("Your turn!")
+            self.gui.update()
+
+            moveOK = "INVALID"
+            while moveOK != "VALID":
+                move = self.gui.waitForBoard()
+                client.send("MOVE:" + str(move))
+                moveOK = network.DataParser().parseData(client.recieve()).content
+
+                if(moveOK != "VALID"):
+                    self.gui.setStatus("Invalid move, try again!")
+
+        looped = True
+
         client.close()
-        self.start(True) # goto main menu   
+        self.start(True) # goto main menu
+
+
+    def validateMove(self, board, move):
+            if move == None:
+                return False
+            if board[move] != '*':
+                return False
+            else:
+                return True  

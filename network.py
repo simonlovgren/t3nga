@@ -124,8 +124,15 @@ class DataParser():
 # Wrapper for parsed data
 class Data:
     def __init__(self, data):
-        self.command = data[0]
-        self.content = data[1]
+        try:
+            self.command = data[0]
+        except Exception as e:
+            self.command = None
+
+        try:
+            self.content = data[1]
+        except Exception as e:
+            self.content = None
 
 
 
