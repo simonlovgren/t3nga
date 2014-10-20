@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 import socket
 import sys
-import re
-import random
 
 # Base communications class
 class BaseSocket:
@@ -135,7 +133,7 @@ class Data:
             self.content = None
 
 
-
+'''
 ####### TEST FUNCTIONS ##########
 def isPort(test):
     try:
@@ -151,7 +149,7 @@ def isIP(test):
 
 ###### TEST ######
 if __name__ == "__main__":
-    '''
+    
     sel = None
     while sel != "s" and sel != "c":
         sel = input('server (s) or client (c)?')
@@ -282,7 +280,7 @@ if __name__ == "__main__":
             print("Response: " + data)
         print("Closing connection")
         sock.close()
-    '''
+    
     # Test parser
     random.seed()
 
@@ -302,7 +300,7 @@ if __name__ == "__main__":
 # print("IS Port (Success): " + str(isPort(55245)))
 # print("IS Port (Success): " + str(isPort(int(input("Manual port")))))
 
-'''
+
 ## Taken from: https://docs.python.org/3.1/howto/sockets.html
 class mysocket:
     """demonstration class only

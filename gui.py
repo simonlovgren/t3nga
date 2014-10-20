@@ -387,6 +387,23 @@ class DataCheck():
         regx = r'[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}'
         return re.match(regx, test) != None
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 if __name__ == "__main__":
     #Load GUI
     gui = GUI()

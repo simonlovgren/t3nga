@@ -28,20 +28,6 @@ class Game:
 
             YellerN = input('felaktig input, vill du spela igen y/n?\n')
 
-    ######## DUPLICATE METHODS start() ###########
-    '''
-    def start(self, start):
-        #loopa tills man antingen fått ett svar y dvs spela en ny omgång eller n ingen ny omgång. exit ifall nej, nyttspel ifall y
-        while True:
-            if YellerN == 'y':
-                self.start()
-            elif YellerN == 'n':
-                exit()
-
-            YellerN = input('felaktig input, vill du spela igen y/n?\n')
-    '''
-    ####### EOF DUP START #######
-
     def winRow(self, board, spelare, koll):
 
         #Gå igenom dem rutorna som ska kollas, dvs rutorna i koll. Finns det någon ruta som innehåller något annat än spelarens tecken avsluta funktionen. Finns det bara spelarens tecken i koll så har spelaren vunnit.
@@ -304,8 +290,13 @@ class Game:
         # Display board
         self.gui.createBoard([500,500],[self.height,self.width])
 
-
-
+        # Wait for remote set up
+        data = ""
+        tries = 5
+        while data != "CLIENT:READY":
+            data = server.recieve()
+            data = network.DataParser().parseData(data)
+            data = data.command + ":" + data.content
 
         turn = 0
         playerTurn = 0
@@ -317,6 +308,7 @@ class Game:
             playerTurn = (turn % 2 == 0)
 
             if(turn == localPlayer):
+                print("Server turn")
                 # Server's turn
                 self.gui.setStatus("Your turn!")
                 self.gui.update()
@@ -326,25 +318,38 @@ class Game:
                 while not self.validateMove(self.board, move):
                     move = self.gui.waitForBoard()
 
+                print("Server move: ", move)
+
             else:
+                print("Remote turn")
                 # Client's turn
-                server.send("MOVE:REMOTE")
+                server.send("TURN:REMOTE")
                 self.gui.setStatus("Opponent's turn!")
                 self.gui.update()
+
+                print("TURN:REMOTE sent")
 
                 # Wait for move
                 move = None
                 while not self.validateMove(self.board, move):
-                    move = server.recieve()
-                    move = network.DataParser.parseData(data).content
+                    move = network.DataParser().parseData(":")
+                    while move.command != "MOVE":
+                    print("Awaiting move")
+                        move = server.recieve()
+                        move = network.DataParser().parseData(data)
+                        print("Recieved:", move.command, move.content)
+                    print("Received move:", move.content)
 
-                    if not self.validateMove(move):
+                    if not self.validateMove(move.content):
+                        print("Invalid move")
                         server.send("MOVE:INVALID")
+                print("Valid move")
                 server.send("MOVE:VALID")
 
-                print("Client move:", move)
+                print("Client move:", move.content)
 
             trials -= 1
+            turn += 1
 
             '''
             #Gör ett drag
@@ -394,7 +399,7 @@ class Game:
         print(data)
         data = network.DataParser().parseData(data)
 
-        player = data.content
+        player = int(data.content)
 
         # Send OK
         client.send("OK:")
@@ -412,9 +417,7 @@ class Game:
         data = client.recieve()
         data = network.DataParser().parseData(data)
 
-        print(data.content)
-
-        grid = list(map(int, data.content.split(",")))
+        grid = list(map(int, data.content.split(","))) # Convert back to list of ints
         print(grid)
 
         # Send OK
@@ -423,12 +426,8 @@ class Game:
         # Display board
         self.gui.createBoard([500,500],[grid[0], grid[1]])
 
-        self.gui.waitForBoard()
-        print(data.content)
-
         # START ACTUAL GAME SESSION
         gameOn = True
-
         looped = False
         while gameOn:
             if not looped and player == 0:
@@ -436,13 +435,18 @@ class Game:
             else:
                 self.gui.setStatus("Opponent's turn!")
             self.gui.update()
+
+            client.send("CLIENT:READY") # Send ready to server
+
             # Wait for turn
             myTurn = "SERVER"
+
             while myTurn != "REMOTE":
                 turn = network.DataParser().parseData(client.recieve())
+                print(turn.command, turn.content)
                 if turn.command == "TURN":
                     myTurn = turn.content
-                print(myTurn)
+                print(myTurn, turn.content)
 
             self.gui.setStatus("Your turn!")
             self.gui.update()
@@ -450,7 +454,9 @@ class Game:
             moveOK = "INVALID"
             while moveOK != "VALID":
                 move = self.gui.waitForBoard()
+                print("Move selected:", move)
                 client.send("MOVE:" + str(move))
+                print("Move sent:", move)
                 moveOK = network.DataParser().parseData(client.recieve()).content
 
                 if(moveOK != "VALID"):
@@ -465,6 +471,9 @@ class Game:
     def validateMove(self, board, move):
             if move == None:
                 return False
+            else: 
+                move = int(move)
+
             if board[move] != '*':
                 return False
             else:
