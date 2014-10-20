@@ -12,11 +12,11 @@ class Game:
         #print(board[6:])
         
         #Gå igenom board och sätt ut x och o på rätt platser i GUIn
-        for i in  range(0, len(board)):
-            if board[i] == 'x':
-                self.gui.addMarker(i, 0)
-            elif board[i] == 'o':
-                self.gui.addMarker(i, 1) 
+        for i in range(0, len(board)):
+            if i not in self.drawnMarkers and board[i] != '*': # Om platsen ej redan utritad och ej är tom
+                self.gui.addMarker(i, int(board[i] == 'o'))
+                self.drawnMarkers.append(i)
+
         self.gui.update()
                        
     def newGame(self):
@@ -192,6 +192,7 @@ class Game:
         #definera spelplanen
         tur = 0
         spelare = 'x'
+        self.drawnMarkers = []
 
         # Check if returning to menu
         if not newGame:
