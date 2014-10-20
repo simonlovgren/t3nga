@@ -47,7 +47,6 @@ class Game:
                 counter = 0
             else:
                 counter += 1
-                print(counter)
             if counter >= xInRow:
                 print('grattis ' + spelare + ' du har vunnit, vill du spela igen y/n?\n')
                 self.gui.setStatus('grattis ' + spelare + ' du har vunnit, vill du spela igen y/n?\n')
@@ -80,13 +79,29 @@ class Game:
                 if i > 0:
                     koll.append(i)
                 koll.append(i+j*(width+1))
-                print(koll)
             self.winRow(board, spelare, koll, xInRow)
             koll = []
 
+        for i in range(xInRow-1, width):
 
-        #self.winRow(board, spelare, [0, 4, 8], xInRow)
-        self.winRow(board, spelare, [2, 4, 6], xInRow)
+            for j in range(0, i+1):
+                koll.append(i+j*(width-1))
+            self.winRow(board, spelare, koll, xInRow)
+            koll = []               
+
+        for i in range(1, height-xInRow):
+            for j in range(0, height-i):
+                koll.append(i*width + j*(width + 1))
+            self.winRow(board, spelare, koll, xInRow)  
+            koll = [] 
+
+        for i in range(2, height-xInRow+2):
+            for j in range(0, height-i +1):
+                koll.append(i*width-1 + j*(width - 1))
+            self.winRow(board, spelare, koll, xInRow) 
+            print(koll) 
+            koll = [] 
+
 
         #om det inte finns någon tom ruta, dvs ingen ruta som innehåller '*' så är spelet oavgjort. Informera spelaren och fråga om en ny omgång
         if '*' not in board:
@@ -167,8 +182,6 @@ class Game:
                 print(spelare, ':')
                 return board
         
-
-        print(board)
         plats = []
         for i in range(0, 9):
             if board[i] == '*':
