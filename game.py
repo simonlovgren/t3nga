@@ -31,10 +31,6 @@ class Game:
             self.start()
         elif ny == 1:
             exit()
-    
-    def start(self, start):
-        #starta nytt spel
-        self.start()
 
     def winRow(self, board, spelare, koll, xInRow):
 
