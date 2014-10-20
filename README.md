@@ -385,7 +385,6 @@ game = Game()
 | --------------------------------------------- | -------------------------------------------------------------------------	|
 | `playingField(self, board)` 					| Displays the game board	 												|
 | `newGame(self)`       						| Lets player choose between new game and exiting program   				|
-| `start(self, start)`							| starts new game										 					|
 | `winRow(self, board, spelare, koll, xInRow)`	| Checks if a row on the board contains xInRow								|
 | `winCheck(self, board, spelare, width, xInRow)`| Goes through all possible ways to get xInRow								|
 | `playerAction(self,spelare)`					| player clicks on a board position											|
@@ -396,7 +395,129 @@ game = Game()
 
 
 
-*Documentation under construction.*
+#### self.playingField(self, board) `Void`
+Displays the board on the GUI
+```
+#!python
+self.playingField(self, board)
+```
+
+##### Parameters
+| Parameter			| Type			| Required	| Default			| Description 										|
+| ----------------- |--------------	| ----------| ------------------| -------------------------------------------------	|
+| `board` 			| list			| yes		| 					| the board that the game is played on				|
+
+
+#### self.newGame(self) `Void`
+Lets the player choose between a new game or exiting the game once the game is finished
+```
+#!python
+self.playingField(self, board)
+```
+
+##### Parameters
+| Parameter			| Type			| Required	| Default			| Description 										|
+| ----------------- |--------------	| ----------| ------------------| -------------------------------------------------	|
+| 	None			| 				| 			| 					| 													|
+
+
+#### self.winRow(self, board, spelare, koll, xInRow) `Void`
+Checks if there is a winning position in a row on the board
+```
+#!python
+self.winRow(self, board, spelare, koll, xInRow)
+```
+
+##### Parameters
+| Parameter			| Type			| Required	| Default			| Description 										|
+| ----------------- |--------------	| ----------| ------------------| -------------------------------------------------	|
+| 	`board`			| 	list		| 	yes		| 	none			| The board											|
+| 	`spelare`		| 	string		| 	yes		| 	none			| informs the function whos turn it is				|
+| 	`koll`			| 	list		| 	yes		| 	none			| A list of boardpositions to be checked			|
+| 	`xInRow`		| 	int			| 	yes		| 	none			| The number of characters in a row required to win	|
+
+
+#### self.winCheck(self, board, spelare, width, xInRow) `Void`
+Creates lists of all possible board positions that could hold a winning list
+```
+#!python
+self.winCheck(self, board, spelare, width, xInRow)
+```
+
+##### Parameters
+| Parameter			| Type			| Required	| Default			| Description 										|
+| ----------------- |--------------	| ----------| ------------------| -------------------------------------------------	|
+| 	`board` 		| 	list		| 	yes		| 	none			| the board that the game is played on				|
+| 	`spelare`		| 	string		| 	yes		| 	none			| informs the function whos turn it is				|
+| 	`width`			| 	int			| 	yes		| 	none			| the size of the board, width is width and height	|
+| 	`xInRow`		| 	int			| 	yes		| 	none			| The number of characters in a row required to win	|
+
+
+#### self.playerAction(self,spelare) `Int`
+Lets the user click on a square on the board
+```
+#!python
+self.playerAction(self,spelare)
+```
+
+##### Parameters
+| Parameter			| Type			| Required	| Default			| Description 										|
+| ----------------- |--------------	| ----------| ------------------| -------------------------------------------------	|
+| 	`spelare`		| 	string		| 	yes		| 	none			| informs the function whos turn it is				|
+
+
+#### self.man(self, spelare, board) `List`
+Lets the user make a move
+```
+#!python
+self.man(self, spelare, board)
+```
+
+##### Parameters
+| Parameter			| Type			| Required	| Default			| Description 										|
+| ----------------- |--------------	| ----------| ------------------| -------------------------------------------------	|
+| 	`spelare`		| 	string		| 	yes		| 	none			| informs the function whos turn it is				|
+| 	`board` 		| 	list		| 	yes		| 	none			| the board that the game is played on				|
+
+
+#### self.twoRow(self, board, koll, testa) `Int`
+Function that tells the AI if the AI or human can win by one move
+```
+#!python
+self.twoRow(self, board, koll, testa)
+```
+
+##### Parameters
+| Parameter			| Type			| Required	| Default			| Description 										|
+| ----------------- |--------------	| ----------| ------------------| -------------------------------------------------	|
+| 	`board` 		| list			| yes		| 					| the board that the game is played on				|
+
+
+#### self.ai(self, spelare, board) `List`
+Main function of ai. Checks if it can win in one move, then checks if it can stop the opponent from winning the next move. Otherwise it chooses a random board position
+```
+#!python
+self.ai(self, spelare, board)
+```
+
+##### Parameters
+| Parameter			| Type			| Required	| Default			| Description 										|
+| ----------------- |--------------	| ----------| ------------------| -------------------------------------------------	|
+| 	`spelare`		| 	string		| 	yes		| 	none			| informs the function whos turn it is				|
+| 	`board` 		| list			| yes		| 					| the board that the game is played on				|
+
+
+#### self.start(self) `Void`
+Main functions of the game, lets player choose pvp or human vs ai, size of board and and number of charcters in a row to win. The does the main loop of the game
+```
+#!python
+self.self.start(self)
+```
+
+##### Parameters
+| Parameter			| Type			| Required	| Default			| Description 										|
+| ----------------- |--------------	| ----------| ------------------| -------------------------------------------------	|
+| 	None			| 				| 			| 					| 													|
 
 network.py
 ----------
