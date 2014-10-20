@@ -373,7 +373,28 @@ menu.undraw()
 
 game.py
 -------
+### game (*class*)
 `game.py` contains the class `Game` invoked in `init.py`, which holds the game logic and AI.
+
+```
+#!python
+game = Game()
+```
+
+| Method	    								| Description                   					   						|
+| --------------------------------------------- | -------------------------------------------------------------------------	|
+| `playingField(self, board)` 					| Displays the game board	 												|
+| `newGame(self)`       						| Lets player choose between new game and exiting program   				|
+| `start(self, start)`							| starts new game										 					|
+| `winRow(self, board, spelare, koll, xInRow)`	| Checks if a row on the board contains xInRow								|
+| `winCheck(self, board, spelare, width, xInRow)`| Goes through all possible ways to get xInRow								|
+| `playerAction(self,spelare)`					| player clicks on a board position											|
+| `man(self, spelare, board)`					| player chooses a position and it is returned if it is a valid choice		|
+| `twoRow(self, board, koll, testa)`			| AI checks if a player can win in 1 move 									|
+| `ai(self, spelare, board)`					| AI main function 															|
+| `start(self)`									| Main function of game. Called to start a game 							|
+
+
 
 *Documentation under construction.*
 
