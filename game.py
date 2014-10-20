@@ -5,10 +5,11 @@ class Game:
     #def __init__(self):
     
     def playingField(self, board):
-        print(board[:3])
-        print(board[3:6])
-        print(board[6:])
+        #print(board[:3])
+        #print(board[3:6])
+        #print(board[6:])
         
+        #Gå igenom board och sätt ut x och o på rätt platser i GUIn
         for i in  range(0, len(board)):
             if board[i] == 'x':
                 self.gui.addMarker(i, 0)
@@ -16,63 +17,63 @@ class Game:
                 self.gui.addMarker(i, 1) 
         self.gui.update()
                        
-    def newGame(self,YellerN):
+    def newGame(self):
 
-        #loopa tills man antingen fått ett svar y dvs spela en ny omgång eller n ingen ny omgång. exit ifall nej, nyttspel ifall y
-        while 1:
-            if YellerN == 'y':
-                self.gui.close()
-                self.start()
-            elif YellerN == 'n':
-                exit()
+        #När spelet är slut så kommer en meny fram där spelaren får välja mellan nytt spel eller att avslupa.
+        self.gui.createMenu(["nytt spel", "avsluta programmet"],100)
+        self.gui.update()
+        ny = self.gui.waitForMenu()
 
-            YellerN = input('felaktig input, vill du spela igen y/n?\n')
-            
+
+        #starta ett nytt spel eller avsluta programmet
+        if ny == 0:
+            self.gui.close()
+            self.start()
+        elif ny == 1:
+            exit()
+    
     def start(self, start):
-        #loopa tills man antingen fått ett svar y dvs spela en ny omgång eller n ingen ny omgång. exit ifall nej, nyttspel ifall y
-        while True:
-            if YellerN == 'y':
-                self.start()
-            elif YellerN == 'n':
-                exit()
-
-            YellerN = input('felaktig input, vill du spela igen y/n?\n')
+        #starta nytt spel
+        self.start()
 
     def winRow(self, board, spelare, koll, xInRow):
 
+        #Gå igenom dem rutorna som ska kollas, dvs rutorna i koll. Finns det xInRow antal rutor med samma tecken i rad så har någon vunnit. När counter
+        # är lika med xInRow så har någon vunnit och användaren frågas om nytt spel
+
         counter = 0
-        #Gå igenom dem rutorna som ska kollas, dvs rutorna i koll. Finns det någon ruta som innehåller något annat än spelarens tecken avsluta funktionen. Finns det bara spelarens tecken i koll så har spelaren vunnit.
         for i in range(0, len(koll)):
             if board[koll[i]] is not spelare:
                 counter = 0
             else:
                 counter += 1
             if counter >= xInRow:
-                print('grattis ' + spelare + ' du har vunnit, vill du spela igen y/n?\n')
-                self.gui.setStatus('grattis ' + spelare + ' du har vunnit, vill du spela igen y/n?\n')
-                self.newGame(input())
+                self.gui.setStatus('grattis ' + spelare + ' du har vunnit, vill du spela igen?')
+                self.gui.update()
+                self.newGame()
 
         return None
         
-    def winCheck(self, board, spelare, height, width, xInRow):
+    def winCheck(self, board, spelare, width, xInRow):
 
+        # Kolla dem vågrätta raderna ifall dem innehåller en vinst 
         koll = []
-        for i in range(0, height):
+        for i in range(0, width):
             i *= width
             for j in range(0, width):
                 koll.append(i+j)
             self.winRow(board, spelare, koll, xInRow)
             koll = []
 
-        #kolla dem lodräta raderna igenom att spara dem i koll och sedan skicka brädet till vinnarrad som kollar ifall raden innehåller en vinst
-
+        # kolla dem lodräta raderna igenom att spara dem i koll och sedan skicka brädet till vinnarrad som kollar ifall raden innehåller en vinst
         for i in range(0, width):
-            for j in range(0, height):
+            for j in range(0, width):
                 koll.append(i+(j*width))
             self.winRow(board, spelare, koll, xInRow)
             koll = []
 
-        #kolla diagonalerna
+        # kolla diagonalerna
+        # från vänster högst up till höger långt ner
         for i in range(0, width-xInRow+1):
             
             for j in range(i, width-i):
@@ -82,6 +83,7 @@ class Game:
             self.winRow(board, spelare, koll, xInRow)
             koll = []
 
+        # från höger högst upp till vänster längst ner
         for i in range(xInRow-1, width):
 
             for j in range(0, i+1):
@@ -89,28 +91,29 @@ class Game:
             self.winRow(board, spelare, koll, xInRow)
             koll = []               
 
-        for i in range(1, height-xInRow):
-            for j in range(0, height-i):
+        # från vänstra sidan av spelplanen till botten
+        for i in range(1, width-xInRow + 1):
+            for j in range(0, width-i):
                 koll.append(i*width + j*(width + 1))
             self.winRow(board, spelare, koll, xInRow)  
             koll = [] 
 
-        for i in range(2, height-xInRow+2):
-            for j in range(0, height-i +1):
+        # från högra sidan av spelplanen till botten
+        for i in range(2, width-xInRow+2):
+            for j in range(0, width-i +1):
                 koll.append(i*width-1 + j*(width - 1))
             self.winRow(board, spelare, koll, xInRow) 
-            print(koll) 
             koll = [] 
 
 
-        #om det inte finns någon tom ruta, dvs ingen ruta som innehåller '*' så är spelet oavgjort. Informera spelaren och fråga om en ny omgång
+        #om det inte finns någon tom ruta, dvs ingen ruta som innehåller '*' så är spelet oavgjort. Informera spelaren och fråga om en ny omgång.
         if '*' not in board:
             self.gui.setStatus('oavgjort, vill du spela igen?')
-            self.newGame(input('oavgjort, vill du spela igen y/n?\n'))
+            self.gui.update()
+            self.newGame()
 
     def playerAction(self,spelare):
         
-        print('spelare ' + spelare + ' välj en tom plats på spelplanen igenom att trycka 0-8')
         self.gui.setStatus('spelare ' + spelare + ' välj en tom plats på spelplanen igenom att trycka på den')
         return self.gui.waitForBoard()
         
@@ -120,15 +123,14 @@ class Game:
     #Människor gör ett drag
     def man(self, spelare, board):
     
+        # player action väljer ut var spelaren klickar. Ifall det är en tom plats blir den nu spelarens.
         var = self.playerAction(spelare)
-        while True:
-            if board[var] != '*':
-                print('Den platsen är upptagen, försök igen')
-                var = self.playerAction(spelare)
+        if board[var] != '*':
+            var = self.playerAction(spelare)
 
-            else:
-                board[var] = spelare
-                return board
+        else:
+            board[var] = spelare
+            return board
 
     def twoRow(self, board, koll, testa):
         spe = 0
@@ -156,30 +158,25 @@ class Game:
                     testa = 'o'
                 else:
                     testa = 'x'
-                    print("varv två")
 
             for i in [0, 3, 6]:
                 koll = [i, i + 1, i + 2]
                 if self.twoRow(board, koll, testa) >= 0:
                     board[self.twoRow(board, koll, testa)] = spelare
-                    print(spelare, ':')
                     return board
 
             for i in [0, 1, 2]:
                 koll = [i, i + 3, i + 6]
                 if self.twoRow(board, koll, testa) >= 0:
                     board[self.twoRow(board, koll, testa)] = spelare
-                    print(spelare, ':')
                     return board
         
             if self.twoRow(board, [0, 4, 8], testa) >= 0:
                 board[self.twoRow(board, [0, 4, 8], testa)] = spelare
-                print(spelare, ':')
                 return board
 
             if self.twoRow(board, [2, 4, 6], testa) >= 0:
                 board[self.twoRow(board, [2, 4, 6], testa)] = spelare
-                print(spelare, ':')
                 return board
         
         plats = []
@@ -190,12 +187,8 @@ class Game:
         return board
     
     def start(self):
-        
+
         #definera spelplanen
-        xInRow = 2
-        height = 3
-        width = 3
-        board = ['*']*(height*width)
         tur = 0
         spelare = 'x'
         self.gui = GUI()
@@ -204,13 +197,52 @@ class Game:
         self.gui.createMenu(["Human vs AI", "PvP"], 100)
         self.gui.update()
         select = self.gui.waitForMenu()
+        
         if select == 0:
             intelligens = [0, 1]
+            width = 3
+            xInRow = 3
+        
         elif select == 1:
             intelligens = [0, 0]
+            self.gui.setStatus("Välj hur stort spelbräde du vill ha")
+            self.gui.createMenu(["3x3", "4x4", "5x5", "6x6", "7x7", "8x8", "9x9", "10x10"], 100)
+            self.gui.update()
+            width = self.gui.waitForMenu() + 3
+
+            #välj hur många i rad man ska ha för att vinna
+            self.gui.setStatus("välj hur många i rad man ska ha för att vinna")
+            
+            if width == 3:
+                self.gui.createMenu(["2", "3"], 100)
+
+            elif width == 4:
+                self.gui.createMenu(["2", "3", "4"], 100)
+
+            elif width == 5:
+                self.gui.createMenu(["2", "3", "4", "5"], 100)
+
+            elif width == 6:
+                self.gui.createMenu(["2", "3", "4", "5", "6"], 100)
+
+            elif width == 7:
+                self.gui.createMenu(["2", "3", "4", "5", "6", "7"], 100)
+
+            elif width == 8:
+                self.gui.createMenu(["2", "3", "4", "5", "6", "7", "8"], 100)
+
+            elif width == 9:
+                self.gui.createMenu(["2", "3", "4", "5", "6", "7", "8", "9",], 100)
+
+            elif width == 10:
+                self.gui.createMenu(["2", "3", "4", "5", "6", "7", "8", "9", "10" ], 100)
+
+            self.gui.update()
+            xInRow = self.gui.waitForMenu() + 2
         #visa spelplanen för spelarna
+        board = ['*']*(width*width)
         self.playingField(board)
-        self.gui.createBoard([500,500],[height,width])
+        self.gui.createBoard([500,500],[width,width])
         self.gui.update()
 
         #mainloop i spelet
@@ -232,5 +264,5 @@ class Game:
 
             #visa spelplanen efter spelarens drag, kolla ifall spelaren har vunnit och öka tur med 1
             self.playingField(board)
-            self.winCheck(board, spelare, height, width, xInRow)
+            self.winCheck(board, spelare, width, xInRow)
             tur += 1
