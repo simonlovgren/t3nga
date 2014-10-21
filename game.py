@@ -81,7 +81,6 @@ class Game:
                 #if i > 0:
                     #koll.append(i)
                 koll.append(i+j*(width+1))
-            print(koll)
             self.winRow(board, spelare, koll, xInRow, "Diag1")
             koll = []
 
