@@ -35,7 +35,7 @@ class Game:
         elif ny == 1:
             sys.exit()
 
-    def winRow(self, board, spelare, koll, xInRow):
+    def winRow(self, board, spelare, koll, xInRow, fromWhere="Unknown"):
 
         #Gå igenom dem rutorna som ska kollas, dvs rutorna i koll. Finns det xInRow antal rutor med samma tecken i rad så har någon vunnit. När counter
         # är lika med xInRow så har någon vunnit och användaren frågas om nytt spel
@@ -47,6 +47,7 @@ class Game:
             else:
                 counter += 1
             if counter >= xInRow:
+                # print("Win from " + fromWhere)
                 self.msleep(250) # Sleep to allow user to see final screen
                 self.gui.setStatus('grattis ' + spelare + ' du har vunnit, vill du spela igen?')
                 self.gui.update()
@@ -62,14 +63,14 @@ class Game:
             i *= width
             for j in range(0, width):
                 koll.append(i+j)
-            self.winRow(board, spelare, koll, xInRow)
+            self.winRow(board, spelare, koll, xInRow, "Horz")
             koll = []
 
         # kolla dem lodräta raderna igenom att spara dem i koll och sedan skicka brädet till vinnarrad som kollar ifall raden innehåller en vinst
         for i in range(0, width):
             for j in range(0, width):
                 koll.append(i+(j*width))
-            self.winRow(board, spelare, koll, xInRow)
+            self.winRow(board, spelare, koll, xInRow, "Vertical")
             koll = []
 
         # kolla diagonalerna
@@ -77,10 +78,11 @@ class Game:
         for i in range(0, width-xInRow+1):
             
             for j in range(i, width-i):
-                if i > 0:
-                    koll.append(i)
+                #if i > 0:
+                    #koll.append(i)
                 koll.append(i+j*(width+1))
-            self.winRow(board, spelare, koll, xInRow)
+            print(koll)
+            self.winRow(board, spelare, koll, xInRow, "Diag1")
             koll = []
 
         # från höger högst upp till vänster längst ner
@@ -88,21 +90,21 @@ class Game:
 
             for j in range(0, i+1):
                 koll.append(i+j*(width-1))
-            self.winRow(board, spelare, koll, xInRow)
+            self.winRow(board, spelare, koll, xInRow, "Diag2")
             koll = []               
 
         # från vänstra sidan av spelplanen till botten
         for i in range(1, width-xInRow + 1):
             for j in range(0, width-i):
                 koll.append(i*width + j*(width + 1))
-            self.winRow(board, spelare, koll, xInRow)  
-            koll = [] 
+            self.winRow(board, spelare, koll, xInRow, "Diag3")  
+            koll = []
 
         # från högra sidan av spelplanen till botten
         for i in range(2, width-xInRow+2):
             for j in range(0, width-i +1):
                 koll.append(i*width-1 + j*(width - 1))
-            self.winRow(board, spelare, koll, xInRow) 
+            self.winRow(board, spelare, koll, xInRow, "Diag4")
             koll = [] 
 
 
