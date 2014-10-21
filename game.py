@@ -262,7 +262,7 @@ class Game:
 
     ###  Menues
     def mainMenu(self):
-        self.gui.createMenu(["Human vs AI", "PvP", "Avsluta spelet"], 100)
+        self.gui.createMenu(["Spela mot datorn", "Spela mot varandra", "Avsluta spelet"], 100)
         self.gui.update()
         return self.gui.waitForMenu()
 
