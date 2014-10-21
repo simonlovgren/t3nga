@@ -1,3 +1,4 @@
+#encoding:utf-8
 from random import randint
 from gui import *
 import sys
@@ -280,5 +281,5 @@ class Game:
     ### Millisleep
     def msleep(self, sleep):
         ref, now = time.clock(), time.clock() # Set reference to now
-        while (now - ref) < (sleep/1000):
+        while (now - ref) < (sleep/1000.0):
             now = time.clock()
