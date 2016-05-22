@@ -9,8 +9,7 @@ gui.py
 
 ###GUI (*class*)
 gui.py contains the main code for the grapical user interface. It is built with multiple classes for easy implementation in the logic part of the code, abstracting `graphics.py` yet another step specific for this application. The GUI class is the only interface to be used by the logic part of the code.
-```
-#!python
+```python
 gui = GUI()
 ```
 
@@ -35,8 +34,7 @@ gui = GUI()
 
 #### GUI.createWindow([title]) `Void`
 Creates a new graphics window where drawn content will appear. Autoflush (automatic update of window) is turned off and update is manually accessed using `gui.update()`. `GUI.createWindow()` **must be called before any other GUI method**.
-```
-#!python
+```python
 gui.createWindow("My Window")
 ```
 
@@ -48,40 +46,35 @@ gui.createWindow("My Window")
 
 #### GUI.handleClick() `Void`
 Internal proxy/handle to the GraphWin-method `getMouse()` in `graphic.py`.
-```
-#!python
+```python
 self.handleClick()
 ```
 
 
 #### GUI.update() `Void`
 Updates/writes the changes to the graphics window. Use this when all calculations for the specific frame is done and all objects have been drawn using `draw()`. This is to be able to rapidly draw multiple objects to the graphics window without unessesary delay.
-```
-#!python
+```python
 gui.update()
 ```
 
 
 #### GUI.refresh() `Void`
 Proxy/handle to `GUI.update()`
-```
-#!python
+```python
 gui.refresh()
 ```
 
 
 #### GUI.close() `Void`
 Closes (terminates) the graphics window.
-```
-#!python
+```python
 gui.close()
 ```
 
 
 #### GUI.createStatus(text) `Void`
 Creates the text-status area at the bottom of the screen - **should only be called if text-status does not already exist in window**.
-```
-#!python
+```python
 gui.createStatus("Interface is loading...")
 ```
 ##### Parameters
@@ -92,8 +85,7 @@ gui.createStatus("Interface is loading...")
 
 #### GUI.setStatus(text) `Void`
 Sets (updates) the text displayed in text-status area. `GUI.update()` must be called for change to be displayed in graphics window.
-```
-#!python
+```python
 gui.createStatus("Interface is loading...")
 ```
 ##### Parameters
@@ -104,8 +96,7 @@ gui.createStatus("Interface is loading...")
 
 #### GUI.createMenu(buttons, startY) `Void`
 Creates a vertically listed menu of buttons. How many buttons that can be added depends on the size of the graphics window.
-```
-#!python
+```python
 gui.createMenu(["Button one", "Button two"], 150)
 ```
 ##### Parameters
@@ -117,8 +108,7 @@ gui.createMenu(["Button one", "Button two"], 150)
 
 #### GUI.waitForMenu() `Integer`
 Awaits user clicking on an available menu option/button.
-```
-#!python
+```python
 clickedButtonID = gui.waitForMenu()
 ```
 
@@ -126,8 +116,7 @@ clickedButtonID = gui.waitForMenu()
 
 #### GUI.createBoard(size, grid) `Void`
 Draws up the board for the game.
-```
-#!python
+```python
 gui.createBoard([500,500], [3,3])
 ```
 ##### Parameters
@@ -139,8 +128,7 @@ gui.createBoard([500,500], [3,3])
 
 #### GUI.addMarker(segID, player) `Void`
 Places a player specific marker on the segment with supplied segment ID (`segID`).
-```
-#!python
+```python
 gui.addMarker(2, 0)
 ```
 ##### Parameters
@@ -153,16 +141,14 @@ gui.addMarker(2, 0)
 
 #### GUI.waitForBoard() `Integer`
 Awaits user clicking on a clickable segment on the board. Returns ID of segment (`segID`), starting on `0`.
-```
-#!python
+```python
 clickedSegmentID = gui.waitForBoard()
 ```
 
 
 ###Status (*class*)
 `Status` is used as a wrapper for the on-screen text-status area.
-```
-#!python
+```python
 status = Status()
 ```
 
@@ -177,8 +163,7 @@ status = Status()
 
 ###BaseElement (*class*)
 `BaseElement` is the base class for most (new) graphics objects and contain the shared (common) methods of the new graphics objects. `BaseElement` is not used directly, but rather used as parent to the new graphics objects.
-```
-#!python
+```python
 # Extending newGraphicsObject with BaseElement
 class MyGraphObj(BaseElement):
 	def __init__(self):
@@ -195,8 +180,7 @@ mgo = MyGraphObject()
 
 #### BaseElement.inRectangle(rect, p) `Boolean`
 Checks whether `<Point>p` is inside `<Rectangle>rect` or not.
-```
-#!python
+```python
 r = Rectangle(Point(0, 0), Point(100, 100))
 p = Point(50, 50)
 if mgo.inRectangle(r, p): # Returns True in this case
@@ -211,8 +195,7 @@ if mgo.inRectangle(r, p): # Returns True in this case
 
 #### BaseElement.getTarget(p, elements) `Integer` `None`
 Walks through list of rectangular graphics objects and checks if `<Point>p` is inside any one of them. Returns `None` if no element was the target of the click (`Point`).
-```
-#!python
+```python
 rectangles = [
 Rectangle(Point(0, 0), Point(50, 100),	
 Rectangle(Point(50, 0), Point(100, 100)
@@ -231,8 +214,7 @@ print(target) # 1
 
 ###Board (*class*) `extends BaseElement`
 The `Board` class is used to create- and handle the board created for use within `GUI`.
-```
-#!python
+```python
 board = Board([500,500], [3,3])
 ```
 
@@ -248,8 +230,7 @@ board = Board([500,500], [3,3])
 
 #### Board.\_\_init\_\_(board = [500,500], grid = [3,3]) `Void`
 Initializes the class, optionally takes size of board (`board` = [width, height]) and grid size (`grid` = [horizontal, vertical]). **Runs automatically on calling the class.**
-```
-#!python
+```python
 board = Board([500,500], [3,3]) #Generates a 500x500px board divided 3 by 3
 ```
 ##### Parameters
@@ -262,8 +243,7 @@ board = Board([500,500], [3,3]) #Generates a 500x500px board divided 3 by 3
 
 #### Board.createGrid(w) `Void`
 Calculates grid size, creates rectangles and draws them to GraphWindow `w`. `GUI.update()` **needs to be called for changes to show.**
-```
-#!python
+```python
 w = GraphWin(title, self.width, self.height, autoflush=False)
 board.createGrid(w) # Calculates and draws grid (board) in GraphWin w
 ```
@@ -276,8 +256,7 @@ board.createGrid(w) # Calculates and draws grid (board) in GraphWin w
 
 #### Board.waitForClick(w) `Integer`
 Waits for the player to click on a clickable segment of the board. Returns ID (`segID`) of said segment, starting on `0`.
-```
-#!python
+```python
 segID = board.waitForClick(w) # OR using GUI: segID = gui.waitForBoard(w) # Returns ID of clicked grid segment
 ```
 ##### Parameters
@@ -288,8 +267,7 @@ segID = board.waitForClick(w) # OR using GUI: segID = gui.waitForBoard(w) # Retu
 
 #### Board.addSymbol(w, segID, player) `Void`
 Adds a player symbol/marker onto the grid. `segID` is the ID of the segment where the symbol/marker is to be placed. `GUI.update()` **needs to be called for changes to show.**
-```
-#!python
+```python
 segID = board.waitForClick(w) # OR segID = gui.waitForBoard(w) # Returns ID of clicked grid segment
 player = 0 # 0 = X, 1 = Y
 board.addSymbol(w, segID, player) # Calculates and draws grid (board) in GraphWin w
@@ -305,15 +283,13 @@ board.addSymbol(w, segID, player) # Calculates and draws grid (board) in GraphWi
 
 #### Board.undraw() `Void`
 Undraws all objects associated with `Board`. **Use when creating/drawing new view** (Automatically invoked in `GUI`).
-```
-#!python
+```python
 board.undraw()
 ```
 
 ###Menu (*class*) `extends BaseElement`
 The `Menu` class is used to easily create- and hande basic graphic menus.
-```
-#!python
+```python
 menu = Menu()
 ```
 
@@ -327,8 +303,7 @@ menu = Menu()
 
 #### Menu.__init__(startY = 100, windowSize = [500,500]) `Menu`
 Returns an instance of `Menu` and prepares internal variables.
-```
-#!python
+```python
 # To specify startingpoint on Y-axis as well as window size:
 menu = Menu(100, [500,500]) # Menu starts at 100px on y-axis in percieved window of 500x500px
 ```
@@ -341,8 +316,7 @@ menu = Menu(100, [500,500]) # Menu starts at 100px on y-axis in percieved window
 
 #### Menu.addButtons(buttons, w) `Void`
 Adds buttons in a vertical list starting on `startY`. `GUI.update()` **needs to be called for changes to show.**
-```
-#!python
+```python
 w = GraphWin(title, self.width, self.height, autoflush=False) # Create GraphWin
 menu.addButtons(["Button one", "Button two"], w) # Add buttons with labels "Button One" and "Button two" to GraphWin w
 ```
@@ -355,15 +329,13 @@ menu.addButtons(["Button one", "Button two"], w) # Add buttons with labels "Butt
 
 #### Menu.waitForClick() `Integer`
 Awaits user clicking on an available button.
-```
-#!python
+```python
 clickedButtonID = menu.waitForClick() # OR clickedButtonID = gui.waitForMenu()
 ```
 
 #### Menu.undraw() `Void`
 Undraws all objects associated with `Menu`. **Use when creating/drawing new view** (Automatically invoked in `GUI`).
-```
-#!python
+```python
 menu.undraw()
 ```
 
@@ -376,8 +348,7 @@ game.py
 ### game (*class*)
 `game.py` contains the class `Game` invoked in `init.py`, which holds the game logic and AI.
 
-```
-#!python
+```python
 game = Game()
 ```
 
@@ -397,8 +368,7 @@ game = Game()
 
 #### self.playingField(self, board) `Void`
 Displays the board on the GUI
-```
-#!python
+```python
 self.playingField(self, board)
 ```
 
@@ -410,8 +380,7 @@ self.playingField(self, board)
 
 #### self.newGame(self) `Void`
 Lets the player choose between a new game or exiting the game once the game is finished
-```
-#!python
+```python
 self.playingField(self, board)
 ```
 
@@ -423,8 +392,7 @@ self.playingField(self, board)
 
 #### self.winRow(self, board, spelare, koll, xInRow) `Void`
 Checks if there is a winning position in a row on the board
-```
-#!python
+```python
 self.winRow(self, board, spelare, koll, xInRow)
 ```
 
@@ -439,8 +407,7 @@ self.winRow(self, board, spelare, koll, xInRow)
 
 #### self.winCheck(self, board, spelare, width, xInRow) `Void`
 Creates lists of all possible board positions that could hold a winning list
-```
-#!python
+```python
 self.winCheck(self, board, spelare, width, xInRow)
 ```
 
@@ -455,8 +422,7 @@ self.winCheck(self, board, spelare, width, xInRow)
 
 #### self.playerAction(self,spelare) `Int`
 Lets the user click on a square on the board
-```
-#!python
+```python
 self.playerAction(self,spelare)
 ```
 
@@ -468,8 +434,7 @@ self.playerAction(self,spelare)
 
 #### self.man(self, spelare, board) `List`
 Lets the user make a move
-```
-#!python
+```python
 self.man(self, spelare, board)
 ```
 
@@ -482,8 +447,7 @@ self.man(self, spelare, board)
 
 #### self.twoRow(self, board, koll, testa) `Int`
 Function that tells the AI if the AI or human can win by one move
-```
-#!python
+```python
 self.twoRow(self, board, koll, testa)
 ```
 
@@ -495,8 +459,7 @@ self.twoRow(self, board, koll, testa)
 
 #### self.ai(self, spelare, board) `List`
 Main function of ai. Checks if it can win in one move, then checks if it can stop the opponent from winning the next move. Otherwise it chooses a random board position
-```
-#!python
+```python
 self.ai(self, spelare, board)
 ```
 
@@ -509,8 +472,7 @@ self.ai(self, spelare, board)
 
 #### self.start(self) `Void`
 Main functions of the game, lets player choose pvp or human vs ai, size of board and and number of charcters in a row to win. The does the main loop of the game
-```
-#!python
+```python
 self.self.start(self)
 ```
 
